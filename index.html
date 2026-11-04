@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Name Photography</title>
+<script>/* apply saved (or system) theme before the page paints, so there's no flash */
+try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light"); } catch (e) {}</script>
+<style>
+  :root { --bg:#fff; --ink:#111; --soft:#f6f3ee; --card:#fff; --line:#cfc9bf; --muted:#666; --hdr:rgba(255,255,255,.92); --ok:#e7f4e4; --err:#fbe6e2; --accent:#89cff0; --chev1:#7cc4ee; --chev2:#b9e2f7; color-scheme:light; --serif:"Playfair Display", Georgia, serif; --sans:"Helvetica Neue", Arial, sans-serif; }
+  [data-theme="dark"] { --bg:#0f0f10; --ink:#f1f1f1; --soft:#171718; --card:#1e1e20; --line:#3a3a3d; --muted:#a3a3a8; --hdr:rgba(15,15,16,.92); --ok:#1d3a22; --err:#4a2320; --accent:#c8553d; --chev1:#c8553d; --chev2:#e9a592; color-scheme:dark; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; }
+  body { font-family:var(--sans); background:var(--bg); color:var(--ink); transition:background .3s, color .3s; }
+  a { color:inherit; }
+
+  /* NAV */
+  header { position:sticky; top:0; z-index:20; background:var(--hdr); backdrop-filter:blur(6px); display:flex; align-items:center; gap:28px; padding:14px 32px; }
+  .logo { font-weight:900; font-size:22px; letter-spacing:-.04em; margin-right:12px; }
+  nav a { font-size:13px; font-weight:600; letter-spacing:.03em; text-transform:uppercase; text-decoration:none; margin-right:22px; }
+  nav a:hover, nav a.active { text-decoration:underline; }
+  .cta { margin-left:auto; background:var(--ink); color:var(--bg); padding:9px 18px; border-radius:30px; font-size:12px; font-weight:700; text-transform:uppercase; text-decoration:none; }
+
+  /* HERO CAROUSEL */
+  .hero { margin:0 32px; height:78vh; border-radius:18px; position:relative; overflow:hidden; background:#222; }
+  .slides { display:flex; height:100%; transition:transform .7s cubic-bezier(.65,0,.35,1); }
+  .slide { flex:none; width:100%; height:100%; }
+  .shade { position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(to top,rgba(0,0,0,.55),transparent 55%); }
+  .hero-text { position:absolute; z-index:2; left:32px; bottom:40px; max-width:480px; color:#fff; }
+  h1 { font-size:clamp(36px,6vw,64px); font-weight:400; letter-spacing:-.04em; line-height:1; }
+  em { font-family:var(--serif); font-style:italic; }
+  h2, h3 { color:var(--chev1); }
+  .hero-text p { font-size:13px; font-weight:600; margin:14px 0 18px; line-height:1.4; }
+  .link { font-family:var(--serif); font-style:italic; text-decoration:none; display:inline-flex; gap:8px; align-items:center; }
+  .link::before { content:"+"; display:inline-grid; place-items:center; width:18px; height:18px; border:1px solid currentColor; border-radius:50%; font-style:normal; font-size:13px; }
+  .arrow { position:absolute; top:50%; translate:0 -50%; z-index:3; width:46px; height:46px; border:0; border-radius:50%; background:rgba(255,255,255,.85); font-size:20px; cursor:pointer; transition:background .2s, scale .2s; }
+  .arrow:hover { background:#fff; scale:1.1; }
+  [data-theme="dark"] .arrow { background:rgba(30,30,32,.85); color:#f1f1f1; box-shadow:0 2px 12px rgba(0,0,0,.4); }
+  [data-theme="dark"] .arrow:hover { background:#f1f1f1; color:#0f0f10; }
+  .prev { left:18px; } .next { right:18px; }
+  .chev { width:24px; height:20px; display:block; pointer-events:none; }
+  .prev .chev, .cl .chev, .sl .chev, .lb-prev .chev { transform:scaleX(-1); }
+  .arrow, .carrow, .sarrow, .lb-btn.lb-prev, .lb-btn.lb-next { display:grid; place-items:center; padding:0; }
+  .dots { position:absolute; bottom:16px; right:24px; z-index:3; display:flex; gap:8px; }
+  .dots button { width:9px; height:9px; border-radius:50%; border:0; background:rgba(255,255,255,.5); cursor:pointer; padding:0; }
+  .dots button.on { background:#fff; }
+
+  /* SECTIONS */
+  section { padding:90px 32px; }
+  .row { display:flex; gap:80px; align-items:flex-start; }
+  .row h2 { font-size:34px; font-weight:400; letter-spacing:-.04em; min-width:180px; }
+  .row p { font-size:12.5px; font-weight:600; max-width:280px; line-height:1.4; }
+
+  /* COLLAGE */
+  .collage { position:relative; height:530px; margin-top:20px; }
+  #portfolio { padding-bottom:30px; }
+  #collections { padding-top:50px; }
+  .card { position:absolute; border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,.18); transform:rotate(var(--r)); transition:transform .35s ease; }
+  .card:hover { transform:rotate(0) scale(1.06); z-index:5; }
+
+
+  /* COLLECTIONS */
+  .coll-wrap { position:relative; margin-top:30px; }
+  .colls { display:flex; gap:20px; overflow-x:auto; scroll-snap-type:x mandatory; padding:6px 2px 18px; scrollbar-width:thin; }
+  .coll { flex:none; width:320px; scroll-snap-align:start; border:0; background:none; text-align:left; cursor:pointer; font:inherit; color:inherit; }
+  .coll .cv { height:500px; border-radius:16px; position:relative; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.15); transition:transform .35s, box-shadow .35s; }
+  .coll:hover .cv { transform:translateY(-6px); box-shadow:0 16px 34px rgba(0,0,0,.25); }
+  .coll .cv::after { content:"View collection →"; position:absolute; left:16px; bottom:14px; color:#fff; font-family:var(--serif); font-style:italic; font-size:14px; opacity:0; transform:translateY(8px); transition:.3s; }
+  .coll:hover .cv::after { opacity:1; transform:none; }
+  .coll .cv::before { content:""; position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,.45),transparent 50%); }
+  .coll h3 { font-size:22px; font-weight:400; letter-spacing:-.03em; margin-top:14px; }
+  .coll p { font-size:12px; font-weight:600; color:var(--muted); margin-top:2px; }
+  .carrow { position:absolute; top:240px; z-index:2; width:40px; height:40px; border:0; border-radius:50%; background:var(--card); color:var(--ink); box-shadow:0 2px 12px rgba(0,0,0,.3); cursor:pointer; font-size:17px; }
+  .carrow:hover { background:var(--ink); color:var(--bg); }
+  .cl { left:-14px; } .cr { right:-14px; }
+
+  /* vertical layout: stacked heading + tall portrait covers */
+  #collections .row { flex-direction:column; gap:14px; }
+  /* fade in + slide up as each cover scrolls into view */
+  .coll { opacity:0; transform:translateY(80px); transition:opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+  .coll.show { opacity:1; transform:none; }
+  /* fade over the right quarter of the collections (hidden once you reach the end) */
+  .coll-wrap::after { content:""; position:absolute; top:0; right:0; bottom:18px; width:25%; pointer-events:none; z-index:1;
+                      background:linear-gradient(to right,transparent,var(--bg) 92%); transition:opacity .4s; }
+  .coll-wrap.end::after { opacity:0; }
+  @media (prefers-reduced-motion:reduce) { .coll { opacity:1; transform:none; transition:none; } }
+
+  /* COLLECTION MODAL + LIGHTBOX */
+  .modal { position:fixed; inset:0; z-index:50; background:var(--bg); overflow-y:auto; display:none; padding:28px 32px 60px; }
+  .modal.open { display:block; animation:fade .3s; }
+  @keyframes fade { from { opacity:0; transform:translateY(20px); } }
+  .mhead { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; margin-bottom:28px; }
+  .mhead h2 { font-size:clamp(30px,5vw,56px); font-weight:400; letter-spacing:-.04em; line-height:1; }
+  .mhead p { font-size:13px; font-weight:600; color:var(--muted); margin-top:10px; max-width:460px; line-height:1.4; }
+  .x { flex:none; width:44px; height:44px; border-radius:50%; border:1px solid var(--line); background:var(--card); color:var(--ink); font-size:20px; cursor:pointer; }
+  .x:hover { background:var(--ink); color:var(--bg); }
+  .gallery { columns:3 240px; column-gap:14px; }
+  .gallery button { display:block; width:100%; border:0; padding:0; margin:0 0 14px; border-radius:12px; cursor:zoom-in; transition:transform .25s, filter .25s; }
+  .gallery button:hover { transform:scale(1.02); filter:brightness(1.08); }
+  .back { display:flex; align-items:center; justify-content:center; gap:10px; margin:40px auto 0; padding:16px 34px; border:1px solid var(--ink); border-radius:40px; background:var(--card); color:var(--ink); font:inherit; font-size:13px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; cursor:pointer; transition:background .2s, color .2s; }
+  .back:hover { background:var(--ink); color:var(--bg); }
+  .lightbox { position:fixed; inset:0; z-index:60; background:rgba(0,0,0,.92); display:none; align-items:center; justify-content:center; }
+  .lightbox.open { display:flex; }
+  .lb-img { width:min(86vw,1000px); height:80vh; border-radius:12px; }
+  .lb-btn { position:absolute; width:50px; height:50px; border-radius:50%; border:0; background:rgba(255,255,255,.9); font-size:22px; cursor:pointer; }
+  .lb-prev { left:20px; } .lb-next { right:20px; } .lb-close { top:20px; right:20px; }
+  .lb-count { position:absolute; bottom:18px; color:#fff; font-size:13px; font-weight:600; }
+
+  /* STUDIO TEXT + ROUNDED BUTTON */
+  .pill { display:inline-block; font-family:var(--serif); font-style:italic; font-size:16px; text-decoration:none; padding:14px 32px; border:1px solid var(--ink); border-radius:40px; transition:background .25s, color .25s, transform .25s; }
+  .pill:hover { background:var(--ink); color:var(--bg); transform:translateY(-2px); }
+  .big { font-size:clamp(26px,3.6vw,44px); letter-spacing:-.04em; line-height:1.1; max-width:720px; margin:50px 0 28px; }
+
+  /* PHOTO STRIP */
+  .strip { overflow:hidden; padding:10px 0 70px; }
+  .track { display:flex; gap:16px; width:max-content; animation:slide 30s linear infinite; }
+  .track div { height:200px; flex:none; border-radius:18px; }
+  .strip:hover .track { animation-play-state:paused; }
+  @keyframes slide { to { transform:translateX(-50%); } }
+
+  /* BOOKING */
+  #book { background:var(--soft); }
+  .book-grid > *, .style-wrap { min-width:0; }   /* lets the scrolling style row stay inside its column */
+  .book-grid { display:grid; grid-template-columns:1fr 1fr; gap:48px; margin-top:40px; }
+  label, .lbl { display:block; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; margin:18px 0 8px; }
+  input, select, textarea { width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:10px; font:inherit; font-size:14px; background:var(--card); color:var(--ink); }
+  input:focus, select:focus, textarea:focus { outline:2px solid var(--ink); border-color:transparent; }
+  textarea { min-height:100px; resize:vertical; }
+  .types, .slots { display:flex; flex-wrap:wrap; gap:8px; }
+  .types button, .slots button { padding:10px 16px; border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:30px; font:inherit; font-size:13px; font-weight:600; cursor:pointer; transition:all .15s; }
+  .types button:hover, .slots button:hover:not(:disabled) { border-color:var(--ink); }
+  .types button.on, .slots button.on { background:var(--ink); color:var(--bg); border-color:var(--ink); }
+  .slots button:disabled { opacity:.35; text-decoration:line-through; cursor:not-allowed; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .submit { margin-top:26px; width:100%; padding:16px; border:0; border-radius:40px; background:#3a3a3a; color:#fff; font:inherit; font-weight:700; font-size:14px; letter-spacing:.04em; text-transform:uppercase; cursor:pointer; transition:filter .2s; }
+  .submit:hover { background:#585858; }
+  [data-theme="dark"] .submit { background:#3f3f42; border:1px solid #6a6a6e; }
+  [data-theme="dark"] .submit:hover { background:#58585c; }
+  .summary { background:var(--card); border-radius:16px; padding:26px; font-size:14px; line-height:1.8; position:sticky; top:90px; align-self:start; }
+  .summary h3 { font-weight:400; font-size:24px; letter-spacing:-.03em; margin-bottom:10px; }
+  .summary dt { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-top:10px; }
+  .msg { display:none; margin-top:18px; padding:16px; border-radius:12px; background:var(--ok); font-size:14px; font-weight:600; line-height:1.5; }
+  .msg.err { background:var(--err); }
+
+
+  /* STYLE PICKER (horizontal scroll) */
+  .style-wrap { position:relative; }
+  .styles { display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; padding:4px 2px 14px; scrollbar-width:thin; }
+  .style-card { flex:none; width:210px; scroll-snap-align:start; text-align:left; background:var(--card); color:var(--ink); border:2px solid var(--line); border-radius:14px; padding:0; cursor:pointer; font:inherit; overflow:hidden; transition:border-color .15s, transform .15s; }
+  .style-card:hover { transform:translateY(-3px); border-color:#aaa; }
+  .style-card.on { border-color:var(--ink); box-shadow:0 6px 18px rgba(0,0,0,.15); }
+  .style-card .pv { height:110px; }
+  .style-card .tx { padding:12px 14px 14px; }
+  .style-card b { display:block; font-size:15px; letter-spacing:-.02em; margin-bottom:4px; }
+  .style-card span { display:block; font-size:12px; font-weight:600; line-height:1.4; color:var(--muted); }
+  .style-card.on::after { content:"✓ Selected"; display:block; font-size:11px; font-weight:700; padding:0 14px 12px; }
+  .sarrow { position:absolute; top:62px; z-index:2; width:36px; height:36px; border:0; border-radius:50%; background:var(--card); color:var(--ink); box-shadow:0 2px 10px rgba(0,0,0,.25); cursor:pointer; font-size:16px; }
+  .sarrow:hover { background:var(--ink); color:var(--bg); }
+  .sl { left:-12px; } .sr { right:-12px; }
+
+  /* FOOTER */
+  footer { background:#000; color:#fff; padding:40px 32px 20px; }
+  .foot { display:grid; grid-template-columns:2fr 1fr 1.4fr 1fr; gap:30px; font-size:13px; font-weight:600; line-height:1.7; }
+  .foot h3 { font-size:34px; font-weight:400; letter-spacing:-.04em; line-height:1.1; margin-bottom:10px; }
+  .foot a { display:block; text-transform:uppercase; text-decoration:none; }
+  .foot a:hover { text-decoration:underline; }
+  .wordmark { font-size:clamp(50px,12vw,170px); letter-spacing:-.05em; line-height:1; margin:50px 0 10px; white-space:nowrap; }
+  small { font-size:11px; font-weight:600; }
+
+  .reveal { opacity:0; transform:translateY(40px); transition:opacity .8s, transform .8s; }
+  .reveal.show { opacity:1; transform:none; }
+
+  /* divider between Book and About in the nav */
+  .vline { display:inline-block; width:1px; height:18px; background:var(--ink); opacity:.35; vertical-align:middle; margin:0 22px 0 0; }
+
+  /* DARK MODE TOGGLE */
+  .theme { margin-left:12px; width:40px; height:40px; flex:none; border-radius:50%; border:1px solid var(--line); background:var(--card); color:var(--ink); font-size:17px; cursor:pointer; transition:transform .3s, background .3s; }
+  .theme:hover { transform:rotate(20deg) scale(1.08); }
+
+  /* ABOUT TAB */
+  .about-grid { display:grid; grid-template-columns:1fr 1.3fr; gap:56px; align-items:start; max-width:1100px; }
+  .portrait { aspect-ratio:4/5; border-radius:18px; box-shadow:0 14px 40px rgba(0,0,0,.25); position:sticky; top:20px; }
+  .eyebrow { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+  .story h3 { font-size:clamp(30px,4.5vw,52px); font-weight:400; letter-spacing:-.04em; line-height:1.05; margin-bottom:22px; }
+  .story p { font-size:16px; line-height:1.75; margin-bottom:16px; max-width:560px; }
+  .quote { font-family:var(--serif); font-style:italic; font-size:22px; line-height:1.4; border-left:3px solid var(--ink); padding-left:18px; margin:26px 0; max-width:520px; }
+  .facts { display:grid; grid-template-columns:1fr 1fr; gap:18px 30px; margin:30px 0; max-width:560px; }
+  .facts dt { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+  .facts dd { font-size:15px; font-weight:600; margin-top:4px; }
+  .about-actions { display:flex; gap:14px; flex-wrap:wrap; margin-top:8px; }
+  .about-actions .pill, .about-actions .back { margin:0; font-size:14px; cursor:pointer; background:var(--card); color:var(--ink); }
+
+  @media (max-width:800px) {
+    .vline { margin-right:12px; }
+    .theme { margin-left:auto; } .about-grid { grid-template-columns:1fr; gap:28px; } .portrait { position:static; max-width:360px; }
+    .row { flex-direction:column; gap:14px; } .foot { grid-template-columns:1fr 1fr; }
+    .book-grid { grid-template-columns:1fr; } .summary { position:static; }
+    .collage { height:390px; } .card { transform:rotate(var(--r)) scale(.7); }
+    nav a { margin-right:12px; } .cta { display:none; }
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="chev" viewBox="0 0 28 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4l8 8-8 8" style="stroke:var(--chev2)" stroke-width="4.5"/><path d="M5 4l8 8-8 8" style="stroke:var(--chev1)" stroke-width="4.5"/></symbol></svg>
+
+<header>
+  <span class="logo">✦</span>
+  <nav>
+    <a href="#home" class="active">Home</a>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#collections">Collections</a>
+    <a href="#book">Book</a>
+    <span class="vline" aria-hidden="true"></span>
+    <a href="#about" data-panel>About</a>
+  </nav>
+  <a class="cta" href="#book">Book a shoot</a>
+  <button class="theme" id="theme" aria-label="Switch to dark mode" title="Dark / light mode">&#9790;</button>
+</header>
+
+<main id="home">
+  <div class="hero">
+    <div class="slides">
+      <!-- Swap each gradient for: background:url(photo.jpg) center/cover -->
+      <div class="slide" style="background:linear-gradient(120deg,#3b2a1e,#8a5a36 55%,#2b2118)"></div>
+      <div class="slide" style="background:radial-gradient(circle,#f5c518 0,#e0a800 18%,#000 45%)"></div>
+      <div class="slide" style="background:linear-gradient(120deg,#6b5aa8,#3d6b35 60%,#f2f2f2)"></div>
+      <div class="slide" style="background:linear-gradient(180deg,#4a90d9,#cfe6f7 60%,#2f4f2f)"></div>
+    </div>
+    <div class="shade"></div>
+    <div class="hero-text">
+      <h1>Photographs that<br>tell <em>stories</em></h1>
+      <p>Portrait, event and brand photography with a natural, cinematic eye. Book your session online in under a minute.</p>
+      <a class="link" href="#book">Book a Photoshoot</a>
+    </div>
+    <button class="arrow prev" aria-label="Previous slide"><svg class="chev" aria-hidden="true"><use href="#chev"/></svg></button>
+    <button class="arrow next" aria-label="Next slide"><svg class="chev" aria-hidden="true"><use href="#chev"/></svg></button>
+    <div class="dots"></div>
+  </div>
+
+  <section id="portfolio">
+    <div class="row reveal">
+      <h2>Selected Work</h2>
+      <p>A mix of portraits, street, lifestyle and commercial shoots. Hover a photo to straighten it.</p>
+    </div>
+    <div class="collage reveal">
+      <div class="card" style="--r:-12deg; left:2%;  top:60px;  width:200px; height:280px; background:linear-gradient(#8e6fc0,#4b6b3a)"></div>
+      <div class="card" style="--r:8deg;   left:14%; top:90px;  width:170px; height:220px; background:linear-gradient(#c0392b,#2f4f2f)"></div>
+      <div class="card" style="--r:0deg;   left:30%; top:150px; width:200px; height:300px; background:linear-gradient(#4a90d9,#a9cdf0)"></div>
+      <div class="card" style="--r:14deg;  left:48%; top:0;     width:190px; height:250px; background:linear-gradient(#222,#6b4f3a)"></div>
+      <div class="card" style="--r:-8deg;  left:58%; top:200px; width:230px; height:300px; background:linear-gradient(#ddd,#333)"></div>
+      <div class="card" style="--r:4deg;   left:78%; top:40px;  width:190px; height:260px; background:linear-gradient(#5aa0e8,#244)"></div>
+    </div>
+  </section>
+
+  <section id="collections">
+    <div class="row reveal">
+      <h2>Collections</h2>
+      <p>Browse shoots by theme. Click a cover to open the full collection.</p>
+    </div>
+    <div class="coll-wrap" id="collWrap">
+      <button type="button" class="carrow cl" aria-label="Scroll collections left"><svg class="chev" aria-hidden="true"><use href="#chev"/></svg></button>
+      <div class="colls" id="colls"></div>
+      <button type="button" class="carrow cr" aria-label="Scroll collections right"><svg class="chev" aria-hidden="true"><use href="#chev"/></svg></button>
+    </div>
+  </section>
+
+  <section id="studio">
+    <p class="big reveal">Photography is an act of <em>paying attention.</em> I help you show up as you really are.</p>
+    <a class="pill reveal" href="#book">Start planning</a>
+  </section>
+
+  <div class="strip">
+    <div class="track">
+      <div style="width:130px;background:linear-gradient(#6a9,#245)"></div>
+      <div style="width:120px;background:linear-gradient(#d33,#811)"></div>
+      <div style="width:290px;background:linear-gradient(#9bd,#b66)"></div>
+      <div style="width:120px;background:linear-gradient(#111,#654)"></div>
+      <div style="width:260px;background:linear-gradient(#e43,#353)"></div>
+      <div style="width:130px;background:linear-gradient(#6a9,#245)"></div>
+      <div style="width:120px;background:linear-gradient(#d33,#811)"></div>
+      <div style="width:290px;background:linear-gradient(#9bd,#b66)"></div>
+      <div style="width:120px;background:linear-gradient(#111,#654)"></div>
+      <div style="width:260px;background:linear-gradient(#e43,#353)"></div>
+    </div>
+  </div>
+
+  <!-- BOOKING -->
+  <section id="book">
+    <div class="row reveal">
+      <h2>Book Online</h2>
+      <p>Choose a shoot type, pick a date and time, and send your request. I'll confirm within 24 hours.</p>
+    </div>
+
+    <div class="book-grid">
+      <form id="bookForm" novalidate>
+        <span class="lbl">1. Shoot type</span>
+        <div class="types" id="types"></div>
+
+        <div class="two">
+          <div><label for="date">2. Date</label><input type="date" id="date" required></div>
+          <div><label for="loc">Location</label>
+            <select id="loc"><option>My studio / TBD</option><option>On location (you choose)</option><option>Outdoors / park</option><option>Your venue</option></select>
+          </div>
+        </div>
+
+        <span class="lbl">3. Time</span>
+        <div class="slots" id="slots"></div>
+
+        <div class="two">
+          <div><label for="name">Full name</label><input id="name" autocomplete="name" required></div>
+          <div><label for="phone">Phone</label><input id="phone" type="tel" autocomplete="tel"></div>
+        </div>
+        <label for="email">Email</label><input id="email" type="email" autocomplete="email" required>
+                <span class="lbl">4. Photography style <span style="font-weight:600;text-transform:none;letter-spacing:0;color:var(--muted)">(scroll for more)</span></span>
+        <div class="style-wrap">
+          <button type="button" class="sarrow sl" aria-label="Scroll styles left"><svg class="chev" aria-hidden="true"><use href="#chev"/></svg></button>
+          <div class="styles" id="styles"></div>
+          <button type="button" class="sarrow sr" aria-label="Scroll styles right"><svg class="chev" aria-hidden="true"><use href="#chev"/></svg></button>
+        </div>
+
+        <label for="notes">Notes / ideas</label><textarea id="notes" placeholder="Number of people, outfits, mood, inspiration…"></textarea>
+
+        <button class="submit" type="submit">Request booking</button>
+        <div class="msg" id="msg" role="status"></div>
+      </form>
+
+      <aside class="summary">
+        <h3>Your booking</h3>
+        <dl>
+          <dt>Shoot</dt><dd id="sType">Not selected</dd>
+          <dt>Date</dt><dd id="sDate">Not selected</dd>
+          <dt>Time</dt><dd id="sTime">Not selected</dd>
+          <dt>Style</dt><dd id="sStyle">Not selected</dd>
+          <dt>Estimated price</dt><dd id="sPrice">–</dd>
+        </dl>
+        <p style="font-size:12px;color:var(--muted);margin-top:16px;font-weight:600">A 30% deposit secures your date. Details are sent after confirmation.</p>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="mhead"><div><h2 id="mTitle"></h2><p id="mDesc"></p></div><button class="x" id="mClose" aria-label="Close collection">&times;</button></div>
+  <div class="gallery" id="gallery"></div>
+  <button type="button" class="back" id="mBack">&#8592; Back to collections</button>
+</div>
+<div class="modal" id="about" role="dialog" aria-modal="true" aria-labelledby="aTitle">
+  <div class="mhead"><div><div class="eyebrow">About</div><h2 id="aTitle">My Story</h2></div><button class="x" id="aClose" aria-label="Close About">&times;</button></div>
+  <div class="about-grid">
+    <!-- Replace the gradient with your photo: style="background:url(me.jpg) center/cover" -->
+    <div class="portrait" style="background:linear-gradient(160deg,#5a4636,#c28a5e 55%,#2b2118)"></div>
+    <div class="story">
+      <!-- ✏️ EDIT THIS SECTION: write your own story and details -->
+      <h3>Hi, I'm <em>Your Name</em></h3>
+      <p>I didn't grow up with a camera in my hands. My first "camera" was a cracked phone and a stubborn habit of noticing things: the way late-afternoon light slid across a classroom wall, the half-second when a friend forgot to pose and simply laughed.</p>
+      <p>Then I saved up for a second-hand camera and a single lens, and I took it everywhere. I photographed friends on weekends, strangers on street corners and my family at every gathering, until they stopped complaining. I was learning in public, one blurry frame at a time, and I kept every picture that taught me something.</p>
+      <p>Slowly, people started asking, "Can you do that for me?" My first paid shoot was a friend's graduation portraits, and I was so nervous my hands shook. When she saw the photos she cried, and that was the moment I understood this was more than a hobby.</p>
+      <p class="quote">"I'm not chasing perfect poses. I'm chasing the moment you forget I'm there."</p>
+      <p>Today I'm still early in this journey, and I'm proud of that. Every shoot makes me sharper and every client teaches me something new. I bring fresh energy, a love of natural light and a promise that you'll feel comfortable from the first minute to the last.</p>
+      <p>If you want photographs that feel like you instead of a template, I'd love to meet you.</p>
+      <dl class="facts">
+        <div><dt>Based in</dt><dd>Pretoria, Gauteng</dd></div>
+        <div><dt>Experience</dt><dd>Early career, growing fast</dd></div>
+        <div><dt>Specialities</dt><dd>Portrait · Lifestyle · Events</dd></div>
+        <div><dt>Gear</dt><dd>Your camera &amp; lenses</dd></div>
+      </dl>
+      <div class="about-actions">
+        <button type="button" class="pill" id="aBook">Book a shoot</button>
+        <button type="button" class="back" id="aBack">&#8592; Back to site</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="lightbox" id="lb">
+  <button class="lb-btn lb-close" id="lbClose" aria-label="Close">&times;</button>
+  <button class="lb-btn lb-prev" id="lbPrev" aria-label="Previous"><svg class="chev" aria-hidden="true"><use href="#chev"/></svg></button>
+  <div class="lb-img" id="lbImg"></div>
+  <button class="lb-btn lb-next" id="lbNext" aria-label="Next"><svg class="chev" aria-hidden="true"><use href="#chev"/></svg></button>
+  <div class="lb-count" id="lbCount"></div>
+</div>
+
+<footer>
+  <div class="foot">
+    <div><h3>Let's make<br>something</h3><a class="link" href="mailto:hello@yourname.com" style="text-transform:none">Email Me</a></div>
+    <div><a href="#home">Home</a><a href="#portfolio">Portfolio</a><a href="#collections">Collections</a><a href="#about" data-panel>About</a><a href="#book">Book</a></div>
+    <div>+27 12 345 6789<br>hello@yourname.com<br>Pretoria, Gauteng</div>
+    <div><a href="#" style="text-transform:none;text-decoration:underline">Instagram</a><a href="#" style="text-transform:none;text-decoration:underline">Facebook</a></div>
+  </div>
+  <div class="wordmark">YOUR NAME <em>photo</em></div>
+  <small>© 2026 Your Name Photography</small>
+</footer>
+
+<script>
+/* ====== SETTINGS: edit these ====== */
+const OWNER_EMAIL = "hello@yourname.com";         // booking requests are sent here
+const SHOOTS = { "Portrait":1500, "Lifestyle":2800, "Brand & Product":4500, "Event":6000 };
+const TIMES  = ["08:00","10:00","12:00","14:00","16:00"];
+const CLOSED_WEEKDAYS = [0];                       // 0 = Sunday, 6 = Saturday
+/* ================================== */
+
+const $ = id => document.getElementById(id);
+const state = { type:null, time:null };
+const money = n => "R" + n.toLocaleString("en-ZA");
+
+/* Taken slots live in this browser only. For real bookings use a backend (see notes). */
+const taken = () => { try { return JSON.parse(localStorage.getItem("taken") || "{}"); } catch { return {}; } };
+
+/* Shoot type buttons */
+Object.keys(SHOOTS).forEach(t => {
+  const b = document.createElement("button"); b.type = "button"; b.textContent = t;
+  b.onclick = () => { state.type = t; [...$("types").children].forEach(x => x.classList.toggle("on", x === b)); summary(); };
+  $("types").append(b);
+});
+
+/* Date: no past dates */
+const today = new Date().toISOString().slice(0, 10);
+$("date").min = today;
+$("date").onchange = () => {
+  const d = new Date($("date").value + "T00:00");
+  if (CLOSED_WEEKDAYS.includes(d.getDay())) { show("Sorry, I'm unavailable on that day. Please pick another.", true); $("date").value = ""; }
+  else $("msg").style.display = "none";
+  state.time = null; drawSlots(); summary();
+};
+
+/* Time slots (taken ones are disabled) */
+function drawSlots() {
+  $("slots").innerHTML = "";
+  const day = taken()[$("date").value] || [];
+  TIMES.forEach(t => {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = t;
+    b.disabled = !$("date").value || day.includes(t);
+    b.onclick = () => { state.time = t; [...$("slots").children].forEach(x => x.classList.toggle("on", x === b)); summary(); };
+    if (state.time === t) b.classList.add("on");
+    $("slots").append(b);
+  });
+}
+drawSlots();
+
+
+/* Photography styles: name, description, preview gradient + filter */
+const STYLES = [
+  { n:"Cinematic",     d:"Teal and orange tones, wide framing and a movie-still mood.",   g:"linear-gradient(120deg,#0e3b43,#d9822b)" },
+  { n:"Vivid",         d:"Bold, saturated colour with crisp contrast that pops.",          g:"linear-gradient(120deg,#ff2d6f,#ffd400,#00c2ff)" },
+  { n:"Underexposed",  d:"Deliberately dark, moody and shadow-heavy with rich blacks.",    g:"linear-gradient(120deg,#050505,#2b2230 60%,#6b4a3a)" },
+  { n:"Bright & Airy", d:"Light, soft and clean with gentle pastels and natural light.",   g:"linear-gradient(120deg,#fff7ef,#ffe3d6,#dff1ff)" },
+  { n:"Film & Grain",  d:"Warm, faded colour with analogue grain and a nostalgic feel.",   g:"linear-gradient(120deg,#c9a27a,#7d5a3c 60%,#d8c6a5)" },
+  { n:"Black & White", d:"Timeless monochrome that focuses on shape, light and emotion.",  g:"linear-gradient(120deg,#fff,#888 50%,#000)" },
+  { n:"Golden Hour",   d:"Warm sunset glow with long shadows and flattering light.",       g:"linear-gradient(120deg,#ff9a3c,#ffcf6b 55%,#c2552e)" },
+  { n:"Editorial",     d:"Polished, high-fashion look with strong poses and clean styling.", g:"linear-gradient(120deg,#e9e4dc,#1a1a1a)" }
+];
+state.style = null;
+STYLES.forEach(s => {
+  const b = document.createElement("button"); b.type = "button"; b.className = "style-card";
+  b.innerHTML = `<div class="pv" style="background:${s.g}"></div><div class="tx"><b>${s.n}</b><span>${s.d}</span></div>`;
+  b.onclick = () => { state.style = s.n; [...$("styles").children].forEach(x => x.classList.toggle("on", x === b)); summary(); };
+  $("styles").append(b);
+});
+document.querySelector(".sl").onclick = () => $("styles").scrollBy({ left:-440, behavior:"smooth" });
+document.querySelector(".sr").onclick = () => $("styles").scrollBy({ left: 440, behavior:"smooth" });
+
+function summary() {
+  $("sType").textContent = state.type || "Not selected";
+  $("sDate").textContent = $("date").value ? new Date($("date").value + "T00:00").toLocaleDateString("en-ZA", { weekday:"long", day:"numeric", month:"long", year:"numeric" }) : "Not selected";
+  $("sTime").textContent = state.time || "Not selected";
+  $("sStyle").textContent = state.style || "Not selected";
+  $("sPrice").textContent = state.type ? money(SHOOTS[state.type]) : "–";
+}
+
+function show(text, err) { const m = $("msg"); m.textContent = text; m.className = "msg" + (err ? " err" : ""); m.style.display = "block"; }
+
+/* Submit: validate, mark slot taken, open an email to the photographer */
+$("bookForm").onsubmit = e => {
+  e.preventDefault();
+  if (!state.type) return show("Please choose a shoot type.", true);
+  if (!$("date").value) return show("Please pick a date.", true);
+  if (!state.time) return show("Please pick a time.", true);
+  if (!state.style) return show("Please choose a photography style.", true);
+  if (!$("name").value.trim()) return show("Please enter your name.", true);
+  if (!/^\S+@\S+\.\S+$/.test($("email").value)) return show("Please enter a valid email.", true);
+
+  const t = taken(); (t[$("date").value] ||= []).push(state.time);
+  try { localStorage.setItem("taken", JSON.stringify(t)); } catch {}
+
+  const body = [
+    `Shoot: ${state.type} (${money(SHOOTS[state.type])})`, `Date: ${$("date").value}`, `Time: ${state.time}`,
+    `Style: ${state.style}`, `Location: ${$("loc").value}`, `Name: ${$("name").value}`, `Phone: ${$("phone").value}`,
+    `Email: ${$("email").value}`, `Notes: ${$("notes").value}`
+  ].join("\n");
+  location.href = `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent("Photoshoot booking: " + state.type)}&body=${encodeURIComponent(body)}`;
+
+  show(`Thanks ${$("name").value.split(" ")[0]}! Your request for ${state.type} on ${$("date").value} at ${state.time} is ready. Send the email that just opened and I'll confirm within 24 hours.`);
+  drawSlots();
+};
+$("date").addEventListener("input", summary);
+
+
+/* ====== COLLECTIONS ======
+   To use real photos, put image URLs in `photos`, e.g. photos:["a.jpg","b.jpg"] and a `cover:"cover.jpg"`.
+   Leave `photos` empty to show placeholder gradients based on `hue`. */
+const COLLECTIONS = [
+  { title:"Portraits",      desc:"Natural, expressive portraits in studio and on location.", hue:20,  count:9,  photos:[], cover:"" },
+  { title:"Street & Urban", desc:"City light, texture and everyday moments.",                hue:210, count:8,  photos:[], cover:"" },
+  { title:"Lifestyle",      desc:"Candid, relaxed shoots that feel like you.",               hue:140, count:10, photos:[], cover:"" },
+  { title:"Brand & Product",desc:"Clean, scroll-stopping visuals for your business.",        hue:280, count:8,  photos:[], cover:"" },
+  { title:"Events",         desc:"Celebrations, launches and the in-between moments.",       hue:340, count:9,  photos:[], cover:"" },
+  { title:"Nature",         desc:"Flowers, trees and golden light outdoors.",                hue:60,  count:7,  photos:[], cover:"" }
+];
+const bg = (src, h, i) => src ? `url(${src}) center/cover` : `linear-gradient(${(i*37)%360}deg,hsl(${(h+i*14)%360} 65% ${35+(i%4)*9}%),hsl(${(h+60+i*9)%360} 70% ${25+(i%3)*12}%))`;
+const heights = [220,300,260,340,240,320,280];            // varied heights give the masonry look
+let cur = null, li = 0;
+
+COLLECTIONS.forEach((c, ci) => {
+  c.imgs = c.photos.length ? c.photos.map(u => bg(u)) : Array.from({ length:c.count }, (_, i) => bg("", c.hue, i));
+  const b = document.createElement("button"); b.type = "button"; b.className = "coll";
+  b.innerHTML = `<div class="cv" style="background:${c.cover ? bg(c.cover) : c.imgs[0]}"></div><h3>${c.title}</h3><p>${c.imgs.length} photos</p>`;
+  b.onclick = () => openColl(ci);
+  $("colls").append(b);
+});
+document.querySelector(".cl").onclick = () => $("colls").scrollBy({ left:-640, behavior:"smooth" });
+document.querySelector(".cr").onclick = () => $("colls").scrollBy({ left: 640, behavior:"smooth" });
+
+/* covers fade in and slide up one after another as they enter the screen */
+const cio = new IntersectionObserver(es => { let k = 0; es.forEach(e => { if (e.isIntersecting) { e.target.style.transitionDelay = (k++ * 130) + "ms"; e.target.classList.add("show"); cio.unobserve(e.target); } }); }, { threshold:.15 });
+document.querySelectorAll(".coll").forEach(c => cio.observe(c));
+
+/* remove the right-hand fade when scrolled to the last cover */
+const chkEnd = () => $("collWrap").classList.toggle("end", $("colls").scrollLeft + $("colls").clientWidth >= $("colls").scrollWidth - 6);
+$("colls").addEventListener("scroll", chkEnd, { passive:true }); addEventListener("resize", chkEnd); chkEnd();
+
+function openColl(ci) {
+  cur = COLLECTIONS[ci];
+  $("mTitle").textContent = cur.title; $("mDesc").textContent = cur.desc;
+  $("gallery").innerHTML = "";
+  cur.imgs.forEach((im, i) => {
+    const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label", `Open photo ${i+1}`);
+    b.style.background = im; b.style.height = heights[i % heights.length] + "px";
+    b.onclick = () => openLb(i);
+    $("gallery").append(b);
+  });
+  $("modal").classList.add("open"); $("modal").scrollTop = 0; document.body.style.overflow = "hidden";
+  try { history.pushState({ coll:1 }, ""); } catch {}   // lets the browser Back button close the collection
+}
+function hideColl() { $("lb").classList.remove("open"); $("about").classList.remove("open"); $("modal").classList.remove("open"); document.body.style.overflow = ""; }
+function closeColl() { if (history.state && history.state.coll) history.back(); else hideColl(); }
+addEventListener("popstate", hideColl);
+$("mBack").onclick = closeColl;
+function openLb(i) { li = i; $("lb").classList.add("open"); drawLb(); }
+function drawLb() { li = (li + cur.imgs.length) % cur.imgs.length; $("lbImg").style.background = cur.imgs[li]; $("lbCount").textContent = `${li+1} / ${cur.imgs.length}`; }
+$("mClose").onclick = closeColl;
+$("lbClose").onclick = () => $("lb").classList.remove("open");
+$("lbPrev").onclick = () => { li--; drawLb(); };
+$("lbNext").onclick = () => { li++; drawLb(); };
+$("lb").onclick = e => { if (e.target === $("lb")) $("lb").classList.remove("open"); };
+addEventListener("keydown", e => {
+  if ($("lb").classList.contains("open")) {
+    if (e.key === "Escape") $("lb").classList.remove("open");
+    if (e.key === "ArrowLeft") { li--; drawLb(); } if (e.key === "ArrowRight") { li++; drawLb(); }
+  } else if (e.key === "Escape" && ($("modal").classList.contains("open") || $("about").classList.contains("open"))) closeColl();
+});
+
+/* Dark / light mode */
+function setTheme(t) {
+  document.documentElement.dataset.theme = t;
+  $("theme").innerHTML = t === "dark" ? "&#9728;" : "&#9790;";                 // sun in dark mode, moon in light mode
+  $("theme").setAttribute("aria-label", t === "dark" ? "Switch to light mode" : "Switch to dark mode");
+  try { localStorage.setItem("theme", t); } catch {}
+}
+$("theme").onclick = () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+setTheme(document.documentElement.dataset.theme || "light");
+
+/* About tab: opens like the collection viewer; Back / Esc / browser Back all close it */
+document.querySelectorAll("[data-panel]").forEach(a => a.addEventListener("click", e => {
+  e.preventDefault();
+  $("about").classList.add("open"); $("about").scrollTop = 0; document.body.style.overflow = "hidden";
+  try { history.pushState({ coll:1 }, ""); } catch {}
+}));
+$("aClose").onclick = $("aBack").onclick = closeColl;
+$("aBook").onclick = () => {
+  const go = () => $("book").scrollIntoView({ behavior:"smooth" });
+  if (history.state && history.state.coll) { addEventListener("popstate", () => setTimeout(go, 60), { once:true }); history.back(); }
+  else { hideColl(); go(); }
+};
+
+/* Hero carousel */
+(() => {
+  const hero = document.querySelector(".hero"), track = hero.querySelector(".slides"), n = track.children.length, dots = hero.querySelector(".dots");
+  let i = 0, timer, x0 = null;
+  for (let k = 0; k < n; k++) { const d = document.createElement("button"); d.setAttribute("aria-label", "Slide " + (k + 1)); d.onclick = () => go(k, true); dots.append(d); }
+  function go(k, manual) { i = (k + n) % n; track.style.transform = `translateX(-${i * 100}%)`; [...dots.children].forEach((d, j) => d.classList.toggle("on", j === i)); if (manual) play(); }
+  function play() { clearInterval(timer); timer = setInterval(() => go(i + 1), 4500); }
+  hero.querySelector(".prev").onclick = () => go(i - 1, true);
+  hero.querySelector(".next").onclick = () => go(i + 1, true);
+  hero.onmouseenter = () => clearInterval(timer); hero.onmouseleave = play;
+  hero.addEventListener("touchstart", e => x0 = e.touches[0].clientX, { passive:true });
+  hero.addEventListener("touchend", e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) go(i + (dx < 0 ? 1 : -1), true); x0 = null; });
+  go(0); play();
+})();
+
+/* Scroll reveal + active nav link */
+const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add("show")), { threshold:.15 });
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+const links = [...document.querySelectorAll("nav a:not([data-panel])")];
+addEventListener("scroll", () => {
+  const y = scrollY + 140; let cur = links[0];
+  links.forEach(a => { const t = document.querySelector(a.getAttribute("href")); if (t && t.offsetTop <= y) cur = a; });
+  links.forEach(a => a.classList.toggle("active", a === cur));
+});
+</script>
+</body>
+</html>
