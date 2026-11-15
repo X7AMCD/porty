@@ -6,7 +6,7 @@
 <title>x7studios</title>
 <link rel="icon" type="image/png" href="logo/Blogo.png">
 <link rel="icon" type="image/png" href="logo/Wlogo.png" media="(prefers-color-scheme: dark)">
-<link rel="preload" as="image" href="001.JPG" fetchpriority="high">
+<link rel="preload" as="image" href="https://ik.imagekit.io/amcid/001.JPG" fetchpriority="high">
 <script>/* apply saved (or system) theme before the page paints, so there's no flash */
 try { document.documentElement.dataset.theme = localStorage.getItem("theme") || (matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light"); } catch (e) {}</script>
 <style>
@@ -1092,11 +1092,11 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div class="hero">
     <div class="slides">
       <!-- Swap each gradient for: background:url(photo.jpg) center/cover -->
-      <div class="slide" style="background:url(001.JPG) center/cover" data-title="Between the Frames" data-story="A friend lifts her phone and the whole table goes quiet. Chin resting on her hand, she holds one calm, sideways look while the restaurant glows amber behind her. On the plate in front of her, a birthday wish is written in sauce, and the best photo of the night is taken before anyone says cheese."></div>
-      <div class="slide" data-bg="002.JPG" data-title="Looking Up" data-story="Some days the city only makes sense from the pavement, looking straight up. The tower leans into the sky like a sail, plane-tree leaves frame the corners, and a handful of clouds drift past as if the building had all the time in the world."></div>
-      <div class="slide" data-bg="003.JPG" data-title="A Small Patch of Sun" data-story="Everything else is in shadow, but one beam of afternoon light has found a single daisy. A bee is already at work in its centre, unbothered by the dark. It was the only bright thing in the whole garden, and it didn’t need anything else."></div>
-      <div class="slide" data-bg="004.jpg" data-title="After Hours" data-story="The supermarket is nearly empty and the strip lights hum overhead. He walks ahead down the aisle, a silhouette with only the edge of a collar and the glint of his glasses catching the light. Nobody notices an ordinary errand until it becomes a picture."></div>
-	  <div class="slide" data-bg="005.JPG" data-title="Jacaranda Season" data-story="For a few weeks every spring, the streets turn purple. Behind him the trees are a soft, blurry cloud of blossom, but he is looking down, completely absorbed in whatever is in his hands. The season arrives all around him and he almost misses it."></div>
+      <div class="slide" style="background:url(https://ik.imagekit.io/amcid/001.JPG) center/cover" data-title="Between the Frames" data-story="A friend lifts her phone and the whole table goes quiet. Chin resting on her hand, she holds one calm, sideways look while the restaurant glows amber behind her. On the plate in front of her, a birthday wish is written in sauce, and the best photo of the night is taken before anyone says cheese."></div>
+      <div class="slide" data-bg="https://ik.imagekit.io/amcid/002.JPG" data-title="Looking Up" data-story="Some days the city only makes sense from the pavement, looking straight up. The tower leans into the sky like a sail, plane-tree leaves frame the corners, and a handful of clouds drift past as if the building had all the time in the world."></div>
+      <div class="slide" data-bg="https://ik.imagekit.io/amcid/003.JPG" data-title="A Small Patch of Sun" data-story="Everything else is in shadow, but one beam of afternoon light has found a single daisy. A bee is already at work in its centre, unbothered by the dark. It was the only bright thing in the whole garden, and it didn’t need anything else."></div>
+      <div class="slide" data-bg="https://ik.imagekit.io/amcid/004.jpg" data-title="After Hours" data-story="The supermarket is nearly empty and the strip lights hum overhead. He walks ahead down the aisle, a silhouette with only the edge of a collar and the glint of his glasses catching the light. Nobody notices an ordinary errand until it becomes a picture."></div>
+	  <div class="slide" data-bg="https://ik.imagekit.io/amcid/005.JPG" data-title="Jacaranda Season" data-story="For a few weeks every spring, the streets turn purple. Behind him the trees are a soft, blurry cloud of blossom, but he is looking down, completely absorbed in whatever is in his hands. The season arrives all around him and he almost misses it."></div>
     </div>
     <div class="shade"></div>
     <div class="hero-text">
@@ -1544,25 +1544,74 @@ $("date").addEventListener("input", summary);
    To use real photos, put image URLs in `photos`, e.g. photos:["a.jpg","b.jpg"] and a `cover:"cover.jpg"`.
    Leave `photos` empty to show placeholder gradients based on `hue`. */
 const COLLECTIONS = [
-  { title:"Portraits",      desc:"Natural, expressive portraits in studio and on location.", hue:20,  count:9,  photos:["]https://i.postimg.cc/V0g1v7Wr/01.jpg",
-																														"https://i.postimg.cc/ZvHZnfxd/02.jpg",
-																														"https://i.postimg.cc/SYdqRZf9/03.jpg",
-																														"https://i.postimg.cc/N2DYFNkT/04.jpg",
-																														"https://i.postimg.cc/0Knxjt0D/05.jpg",
-																														"https://i.postimg.cc/1VBPXWrD/06.jpg",
-																														"https://i.postimg.cc/1VBPXWrG/07.jpg",
-																														"https://i.postimg.cc/hhBdJf1r/08.jpg",
-																														"https://i.postimg.cc/0rsw6b0Z/09.jpg",
+  { title:"Portraits",      desc:"Natural, expressive portraits in studio and on location.", hue:20,  count:9,  photos:["]https://ik.imagekit.io/amcid/Images11/01.JPG?updatedAt=1794703380334",
+																														"https://ik.imagekit.io/amcid/Images11/02.JPG?updatedAt=1794703385740",
+																														"https://ik.imagekit.io/amcid/Images11/03.JPG?updatedAt=1794703382783",
+																														"https://ik.imagekit.io/amcid/Images11/04.JPG?updatedAt=1794703383415",
+																														"https://ik.imagekit.io/amcid/Images11/05.JPG?updatedAt=1794703385417",
+																														"https://ik.imagekit.io/amcid/Images11/06.JPG?updatedAt=1794703379723",
+																														"https://ik.imagekit.io/amcid/Images11/07.JPG?updatedAt=1794703385402",
+																														"https://ik.imagekit.io/amcid/Images11/08.JPG?updatedAt=1794703384791",
+																														"https://ik.imagekit.io/amcid/Images11/09.JPG?updatedAt=1794703384813",
 																														"https://ik.imagekit.io/amcid/Images11/10.JPG?updatedAt=1794703421697",
-																														"https://i.postimg.cc/V58CSdWG/11.jpg",
-																														"https://i.postimg.cc/5jVCH6SP/12.jpg",
-																														"https://i.postimg.cc/ZvHZnfx9/000.jpg",
-																														"https://i.postimg.cc/8f4Dcym7/00.jpg"], cover:"011.jpg" },
-  { title:"Street & Urban", desc:"City light, texture and everyday moments.",                hue:210, count:8,  photos:["images12/01.jpg","images12/02.jpg","images12/06.jpg","images12/07.jpg","images12/08.jpg","images12/10.jpg","images12/12.jpg","images12/13.jpg","images12/14.jpg","images12/15.jpg","images12/17.jpg","images12/18.jpg","images12/19.jpg"], cover:"012.jpg" },
-  { title:"Lifestyle",      desc:"Candid, relaxed shoots that feel like you.",               hue:140, count:10, photos:["images13/01.JPG","images13/02.JPG","images13/03.JPG","images13/05.JPG","images13/06.JPG","images13/07.JPG"], cover:"013.jpg" },
-  { title:"Brand & Product",desc:"Clean, scroll-stopping visuals for your business.",        hue:280, count:8,  photos:["images14/01.JPG","images14/02.JPG","images14/03.JPG","images14/04.JPG","images15/12.JPG","images14/05.JPG","images14/06.JPG","images14/07.JPG","images14/08.JPG","images14/09.JPG"], cover:"014.jpg" },
-  { title:"Events",         desc:"Celebrations, launches and the in-between moments.",       hue:340, count:9,  photos:["images15/01.JPG","images15/02.JPG","images15/03.JPG","images15/05.JPG","images15/06.JPG","images15/08.JPG","images15/09.JPG","images15/10.JPG","images15/11.JPG","images15/13.JPG","images15/14.JPG"], cover:"015.jpg" },
-  { title:"Nature",         desc:"Flowers, trees and golden light outdoors.",                hue:60,  count:7,  photos:["images16/01.JPG","images16/02.JPG","images16/03.JPG","images16/04.JPG","images12/05.jpg","images16/05.JPG","images16/07.JPG","images16/08.JPG","images16/09.JPG","images16/10.JPG","images16/11.JPG","images16/12.JPG","images16/13.JPG"], cover:"016.jpg"}
+																														"https://ik.imagekit.io/amcid/Images11/11.JPG?updatedAt=1794703378800",
+																														"https://ik.imagekit.io/amcid/Images11/12.JPG?updatedAt=1794703379778",
+																														"https://ik.imagekit.io/amcid/Images11/000.JPG?updatedAt=1794703383427",
+																														"https://ik.imagekit.io/amcid/Images11/00.JPG?updatedAt=1794703380936"], cover:"011.jpg" },
+  { title:"Street & Urban", desc:"City light, texture and everyday moments.",                hue:210, count:8,  photos:["https://ik.imagekit.io/amcid/Images12/02.jpg?updatedAt=1794703378768",
+																														"https://ik.imagekit.io/amcid/Images12/06.jpg?updatedAt=1794703373352",
+																														"https://ik.imagekit.io/amcid/Images12/04.jpg?updatedAt=1794703377491",
+																														"https://ik.imagekit.io/amcid/Images12/07.jpg?updatedAt=1794703379730",
+																														"https://ik.imagekit.io/amcid/Images12/08.jpg?updatedAt=1794703379727",
+																														"https://ik.imagekit.io/amcid/Images12/10.jpg?updatedAt=1794703377493",
+																														"images12/11.jpg",
+																														"https://ik.imagekit.io/amcid/Images12/12.jpg?updatedAt=1794703378768",
+																														"https://ik.imagekit.io/amcid/Images12/13.jpg?updatedAt=1794703383748",
+																														"https://ik.imagekit.io/amcid/Images12/14.jpg?updatedAt=1794703378826",
+																														"https://ik.imagekit.io/amcid/Images12/15.jpg?updatedAt=1794703385083",
+																														"https://ik.imagekit.io/amcid/Images12/17.jpg?updatedAt=1794703380978",
+																														"https://ik.imagekit.io/amcid/Images12/18.jpg?updatedAt=1794703372119",
+																														"https://ik.imagekit.io/amcid/Images12/19.jpg?updatedAt=1794703380620"], cover:"012.jpg" },
+  { title:"Lifestyle",      desc:"Candid, relaxed shoots that feel like you.",               hue:140, count:10, photos:["https://ik.imagekit.io/amcid/images13/01.JPG?updatedAt=1794703378811",
+																														"https://ik.imagekit.io/amcid/images13/02.JPG?updatedAt=1794703381556",
+																														"https://ik.imagekit.io/amcid/images13/03.JPG?updatedAt=1794703384829",
+																														"https://ik.imagekit.io/amcid/images13/05.JPG?updatedAt=1794703377793",
+																														"https://ik.imagekit.io/amcid/images13/06.JPG?updatedAt=1794703385381",
+																														"https://ik.imagekit.io/amcid/images13/07.JPG?updatedAt=1794703382174"], cover:"013.jpg" },
+  { title:"Brand & Product",desc:"Clean, scroll-stopping visuals for your business.",        hue:280, count:8,  photos:["https://ik.imagekit.io/amcid/Images14/01.JPG?updatedAt=1794703371466",
+																														"https://ik.imagekit.io/amcid/Images14/02.JPG?updatedAt=1794703379412",
+																														"https://ik.imagekit.io/amcid/Images14/03.JPG?updatedAt=1794703382539",
+																														"https://ik.imagekit.io/amcid/Images14/04.JPG?updatedAt=1794703365415",
+																														"images15/12.JPG",
+																														"https://ik.imagekit.io/amcid/Images14/05.JPG?updatedAt=1794703378161",
+																														"https://ik.imagekit.io/amcid/Images14/06.JPG?updatedAt=1794703378207",
+																														"https://ik.imagekit.io/amcid/Images14/07.JPG?updatedAt=1794703380319",
+																														"https://ik.imagekit.io/amcid/Images14/08.JPG?updatedAt=1794703378173",
+																														"https://ik.imagekit.io/amcid/Images14/09.JPG?updatedAt=1794703381293"], cover:"014.jpg" },
+  { title:"Events",         desc:"Celebrations, launches and the in-between moments.",       hue:340, count:9,  photos:["https://ik.imagekit.io/amcid/Images15/01.JPG?updatedAt=1794703376640",
+																														"https://ik.imagekit.io/amcid/Images15/02.JPG?updatedAt=1794703365816",
+																														"https://ik.imagekit.io/amcid/Images15/03.JPG?updatedAt=1794703375459",
+																														"https://ik.imagekit.io/amcid/Images15/05.JPG?updatedAt=1794703385120",
+																														"https://ik.imagekit.io/amcid/Images15/06.JPG?updatedAt=1794703384483",
+																														"https://ik.imagekit.io/amcid/Images15/08.JPG?updatedAt=1794703376865",
+																														"https://ik.imagekit.io/amcid/Images15/09.JPG?updatedAt=1794703382835",
+																														"https://ik.imagekit.io/amcid/Images15/10.JPG?updatedAt=1794703384475",
+																														"https://ik.imagekit.io/amcid/Images15/11.JPG?updatedAt=1794703370719",
+																														"https://ik.imagekit.io/amcid/Images15/13.JPG?updatedAt=1794703384476",
+																														"https://ik.imagekit.io/amcid/Images15/14.JPG?updatedAt=1794703384463"], cover:"015.jpg" },
+  { title:"Nature",         desc:"Flowers, trees and golden light outdoors.",                hue:60,  count:7,  photos:["https://ik.imagekit.io/amcid/images16/02.JPG?updatedAt=1794703381276",
+																														"https://ik.imagekit.io/amcid/images16/03.JPG?updatedAt=1794703381851G",
+																														"https://ik.imagekit.io/amcid/images16/04.JPG?updatedAt=1794703380034",
+																														"images12/05.jpg",
+																														"https://ik.imagekit.io/amcid/images16/05.JPG?updatedAt=1794703381869",
+																														"https://ik.imagekit.io/amcid/images16/07.JPG?updatedAt=1794703380045",
+																														"https://ik.imagekit.io/amcid/images16/08.JPG?updatedAt=1794703384464",
+																														"images16/01.JPG",
+																														"https://ik.imagekit.io/amcid/images16/09.JPG?updatedAt=1794703374269",
+																														"https://ik.imagekit.io/amcid/images16/10.JPG?updatedAt=1794703375912",
+																														"https://ik.imagekit.io/amcid/images16/11.JPG?updatedAt=1794703384794",
+																														"https://ik.imagekit.io/amcid/images16/12.JPG?updatedAt=1794703377184",
+																														"https://ik.imagekit.io/amcid/images16/13.JPG?updatedAt=1794703374333"], cover:"016.jpg"}
 ];
 const bg = (src, h, i) => src ? `url(${src}) center/cover` : `linear-gradient(${(i*37)%360}deg,hsl(${(h+i*14)%360} 65% ${35+(i%4)*9}%),hsl(${(h+60+i*9)%360} 70% ${25+(i%3)*12}%))`;
 const ratioCache = {};                                       // natural width / height of each photo, read once
